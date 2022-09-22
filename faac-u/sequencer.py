@@ -5,7 +5,8 @@ class Sequencer(object):
         sequence = [None] * self._bits
         self._generate(sequence, 0)
 
-    def get_sequences(self):
+    @property
+    def sequences(self):
         return self._sequences
 
     def print(self):
