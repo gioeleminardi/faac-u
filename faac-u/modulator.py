@@ -29,6 +29,10 @@ class Modulator(object):
     def sampling_rate(self):
         return self._sampling_rate
 
+    @property
+    def timeline(self):
+        return self._timeline
+
     def encode_pwm(self, bit_sequence):
         zero = 0.33
         one = 0.66
