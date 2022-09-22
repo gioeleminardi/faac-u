@@ -8,7 +8,7 @@ class Pluto(object):
         self._sdr = adi.Pluto(uri)
         self._sdr.sample_rate = self._sample_rate
 
-    def set_tx(self, carrier: int, tx_gain: -50, repeat: False):
+    def set_tx(self, carrier: int, tx_gain=-50, repeat=False):
         self._sdr.tx_rf_bandwidth = self._sample_rate  # filter cutoff, just set it to the same as sample rate
         self._sdr.tx_lo = carrier
         self._sdr.tx_hardwaregain_chan0 = tx_gain  # Increase to increase tx power, valid range is -90 to 0 dB
