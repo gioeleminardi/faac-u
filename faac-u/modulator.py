@@ -2,13 +2,13 @@ import numpy as np
 
 
 class Modulator(object):
-    def __init__(self, symbols, samples, baseband_fc=38e3, sampling_rate=2.1e6):
+    def __init__(self, symbols, symbol_duration, baseband_fc, sampling_rate):
         self._symbols = symbols
-        self._samples = samples
+        self._symbol_duration = symbol_duration
         self._baseband_fc = baseband_fc
         self._sampling_rate = sampling_rate
         self._dt = 1 / self._sampling_rate
-        self._symbol_duration = self._samples * self._dt
+        self._samples = int(np.floor(self._symbol_duration / self._dt))
         self._symbol_t = np.arange(0, self._symbol_duration, self._dt)
         self._max_duration = self._symbols * self._symbol_duration
         self._timeline = np.arange(0, self._max_duration, self._dt)

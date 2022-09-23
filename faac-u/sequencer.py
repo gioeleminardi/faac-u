@@ -1,5 +1,5 @@
 class Sequencer(object):
-    def __init__(self, bits=12):
+    def __init__(self, bits: int):
         self._bits = bits
         self._sequences = []
         sequence = [None] * self._bits
