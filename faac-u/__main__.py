@@ -2,7 +2,7 @@ import logging
 from faac_u import FaacU
 
 sample_rate = 4e6  # Hz
-center_freq = 333.8e6  # Hz
+center_freq = 333740000  # Hz
 signal_carrier = 67e3  # Hz
 symbols = 13
 symbol_duration = 0.000990
