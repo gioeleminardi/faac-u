@@ -10,20 +10,31 @@ from modulator import Modulator
 
 
 class FaacU(object):
-    def __init__(self, rf_carrier: int, bb_carrier: int, sampling_rate: int, symbol_duration, tx_gain=-20):
+    def __init__(self, sample_rate, center_freq, signal_carrier, symbols, symbol_duration, tx_gain):
         self._log = logging.getLogger(__name__)
-        self._rf_carrier = rf_carrier
-        self._tx_gain = tx_gain
-        self._bb_carrier = bb_carrier
+
+        self._sample_rate = sample_rate
+        self._center_freq = center_freq
+        self._signal_carrier = signal_carrier
+        self._symbols = symbols
         self._symbol_duration = symbol_duration
-        self._sampling_rate = sampling_rate
-        self._sequencer = Sequencer(bits=13)
-        self._modulator = Modulator(symbols=self._sequencer.bits, symbol_duration=self._symbol_duration,
-                                    baseband_fc=self._bb_carrier, sampling_rate=self._sampling_rate)
+        self._tx_gain = tx_gain
+
+        self._sequencer = Sequencer(bits=self._symbols)
+
+        self._modulator = Modulator(
+            sample_rate=self._sample_rate,
+            signal_carrier=self._signal_carrier,
+            symbols=self._symbols,
+            symbol_duration=self._symbol_duration
+        )
+
         try:
-            self._pluto = Pluto(int(self._modulator.sampling_rate))
-            self._pluto.set_tx(self._rf_carrier, self._tx_gain)
-            #self._pluto.set_rx(self._rf_carrier)
+            self._pluto = Pluto(sample_rate=self._sample_rate)
+            self._pluto.set_tx(
+                center_freq=self._center_freq,
+                tx_gain=self._tx_gain
+            )
         except Exception as ex:
             self._log.warning(f"No Pluto: {ex}")
             self._pluto = None
@@ -31,13 +42,14 @@ class FaacU(object):
     def run(self):
         for sequence in self._sequencer.sequences:
             if sequence == [1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]:
-                pwm_code = self._modulator.encode_pwm(sequence)
-                ask_signal = self._modulator.modulate_ask(pwm_code)
+                encoded_sequence = self._modulator.encode_pwm(sequence)
+                modulated_signal = self._modulator.modulate_ask(encoded_sequence)
                 if self._pluto is None:
-                    plt.plot(self._modulator.timeline, np.real(ask_signal))
+                    plt.plot(self._modulator.timeline, np.real(modulated_signal))
+                    plt.plot(self._modulator.timeline, np.imag(modulated_signal))
                     plt.show()
                 else:
                     self._log.warning('sending')
-                    for i in range(1000):
-                        self._pluto.send(ask_signal * (2 ** 14))
-                        time.sleep(0.01)
+                    for i in range(200):
+                        self._pluto.send(modulated_signal)
+                        time.sleep(0.010)

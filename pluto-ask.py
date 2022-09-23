@@ -14,12 +14,15 @@ def binary(symbols_, samples_):
     return rand_n_
 
 
+# Params
 sample_rate = 4e6  # Hz
-center_freq = 333.8e6  # Hz
+center_freq = 334e6  # Hz
 signal_carrier = 70e3  # Hz
-dt = 1 / sample_rate
 symbols = 13
 symbol_duration = 0.000990
+tx_gain = -30
+
+dt = 1 / sample_rate
 samples = np.floor(symbol_duration / dt)
 symbol_timeline = np.arange(0, symbol_duration, dt)
 zero = 0.33
@@ -27,13 +30,13 @@ one = 0.66
 zero_pwm = symbol_timeline % symbol_duration >= symbol_duration * zero
 one_pwm = symbol_timeline % symbol_duration >= symbol_duration * one
 
-sig, code = binary(symbols, int(samples))
+code = binary(symbols, int(samples))
 
 sdr = adi.Pluto("ip:192.168.2.1")
 sdr.sample_rate = int(sample_rate)
 sdr.tx_rf_bandwidth = sdr.sample_rate  # filter cutoff, just set it to the same as sample rate
 sdr.tx_lo = int(center_freq)
-sdr.tx_hardwaregain_chan0 = -30  # Increase to increase tx power, valid range is -90 to 0 dB
+sdr.tx_hardwaregain_chan0 = tx_gain  # Increase to increase tx power, valid range is -90 to 0 dB
 
 t = np.arange(0, symbols * symbol_duration, dt)
 signal = np.exp(2.0j * np.pi * signal_carrier * t)
@@ -49,7 +52,7 @@ for bit in code:
 signal *= pwm_sig
 signal *= 2 ** 14
 
-for i in range(200):
+for i in range(2000):
     sdr.tx(signal)  # transmit the batch of samples once
     time.sleep(0.02)
 # plt.plot(t, np.real(signal))
