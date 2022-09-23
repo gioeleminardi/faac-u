@@ -1,8 +1,8 @@
 import logging
 from faac_u import FaacU
 
-RF_Carrier = int(334e6)
-TX_gain = -20
+RF_Carrier = 334000000
+TX_gain = -15
 BB_Carrier = int(68e3)
 sampling_rate = int(4e6)
 

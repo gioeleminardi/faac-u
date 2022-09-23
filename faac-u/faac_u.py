@@ -23,7 +23,7 @@ class FaacU(object):
         try:
             self._pluto = Pluto(int(self._modulator.sampling_rate))
             self._pluto.set_tx(self._rf_carrier, self._tx_gain)
-            self._pluto.set_rx(self._rf_carrier)
+            #self._pluto.set_rx(self._rf_carrier)
         except Exception as ex:
             self._log.warning(f"No Pluto: {ex}")
             self._pluto = None
@@ -38,6 +38,6 @@ class FaacU(object):
                     plt.show()
                 else:
                     self._log.warning('sending')
-                    for i in range(100):
+                    for i in range(1000):
                         self._pluto.send(ask_signal * (2 ** 14))
                         time.sleep(0.01)
