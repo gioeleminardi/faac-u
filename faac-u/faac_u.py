@@ -50,6 +50,6 @@ class FaacU(object):
                     plt.show()
                 else:
                     self._log.warning('sending')
-                    for i in range(200):
+                    for i in range(2000):
                         self._pluto.send(modulated_signal)
-                        time.sleep(0.010)
+                        time.sleep(0.013)
