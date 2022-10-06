@@ -9,7 +9,7 @@ class Modulator(object):
         self._symbol_duration = symbol_duration
 
         self._dt = 1 / self._sample_rate
-        self._samples = np.floor(self._symbol_duration / self._dt)
+        self._samples = np.round(self._symbol_duration / self._dt)
         self._zero_dc = 0.33
         self._one_dc = 1 - self._zero_dc
         self._symbol_timeline = np.arange(0, self._symbol_duration, self._dt)
