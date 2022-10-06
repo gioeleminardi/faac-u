@@ -13,3 +13,8 @@ PlutoSDR PWM over ASK sender
 - Between two consecutive sequences there are 10ms of idle
 - A sequence is transmitted in ~12ms (including start bit)
 - DUT PWR: -50dbFS
+
+## snippet
+```
+sdr._ctrl.find_channel('altvoltage0',True).attrs['powerdown'].value = '1'
+```
