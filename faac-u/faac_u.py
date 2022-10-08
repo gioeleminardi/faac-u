@@ -41,7 +41,8 @@ class FaacU(object):
 
     def run(self):
         for sequence in self._sequencer.sequences:
-            if sequence == [1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]:
+            # if sequence == [1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0]:
+            if sequence[0] == 1:
                 encoded_sequence = self._modulator.encode_pwm(sequence)
                 modulated_signal = self._modulator.modulate_ask(encoded_sequence)
                 if self._pluto is None:
@@ -50,6 +51,7 @@ class FaacU(object):
                     plt.show()
                 else:
                     self._log.warning('sending')
-                    for i in range(2000):
+                    for i in range(3):
+                        self._log.warning(f"Trying: {sequence}")
                         self._pluto.send(modulated_signal)
                         time.sleep(0.015)
