@@ -5,7 +5,7 @@ sample_rate = 4e6  # Hz
 center_freq = 330e6  # Hz
 signal_carrier = 19e3  # Hz
 symbols = 13
-symbol_duration = 0.000990
+symbol_duration = 0.001
 tx_gain = 0
 
 if __name__ == "__main__":

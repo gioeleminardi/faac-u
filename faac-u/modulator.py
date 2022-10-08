@@ -9,13 +9,13 @@ class Modulator(object):
         self._symbol_duration = symbol_duration
 
         self._dt = 1 / self._sample_rate
-        self._samples = np.round(self._symbol_duration / self._dt)
+        self._samples = np.int(np.round(self._symbol_duration / self._dt))
         self._zero_dc = 0.33
-        self._one_dc = 1 - self._zero_dc
-        self._symbol_timeline = np.arange(0, self._symbol_duration, self._dt)
+        self._one_dc = 0.66
+        self._symbol_timeline = np.linspace(0, self._symbol_duration, self._samples)
+        self._timeline = np.linspace(0, self._symbols * self._symbol_duration, self._samples * self._symbols)
         self._zero_pwm_signal = self._symbol_timeline % self._symbol_duration >= self._symbol_duration * self._zero_dc
         self._one_pwm_signal = self._symbol_timeline % self._symbol_duration >= self._symbol_duration * self._one_dc
-        self._timeline = np.arange(0, self._symbols * self._symbol_duration, self._dt)
         self._baseband_signal = 0.5 * np.exp(2.0j * np.pi * self._signal_carrier * self._timeline)
 
     @property
